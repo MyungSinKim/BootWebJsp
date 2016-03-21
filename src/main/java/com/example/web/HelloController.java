@@ -12,4 +12,8 @@ public class HelloController {
 	public String hello(ModelMap model) {
 		return "index.jsp";
 	}
+	@RequestMapping(value="/calendar.do", method=RequestMethod.GET)
+	public String calendar(ModelMap model) {
+		return "calendar.jsp";
+	}
 }
