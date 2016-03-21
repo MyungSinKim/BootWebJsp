@@ -1,4 +1,5 @@
-function AllTimePickers(){
+function initDatePickers(){
+	// datepicker Korean option
 	$.datepicker.regional['ko'] = {
 		closeText: '닫기',
 		prevText: '이전달',
@@ -20,15 +21,17 @@ function AllTimePickers(){
 	};
 	
 	$.datepicker.setDefaults($.datepicker.regional['ko']);
+	
 	$('#schDate').datepicker({
 		changeMonth: false,
 		changeYear: false,
-		dateFormat:"yy-mm-dd",
 		defaultDate:$('#schDate').val()
 	});
 	
+	// monthpicker and year selector start/end year (10 year ago)
 	var currentYear = (new Date()).getFullYear();
 	var startYear = currentYear-10;
+	
 	var options = {
 			startYear: startYear,
 			finalYear: currentYear,
@@ -37,6 +40,8 @@ function AllTimePickers(){
 	};
 	
 	$('#schMonth').monthpicker(options);
+	
+	// make year selector 
 	for (var i = currentYear; i >= startYear; i--) {
 		if ($("#schYear").attr("pathValue") == i) {
 			$("#schYear").append("<option value='"+i+"' selected>"+i+"</option>");

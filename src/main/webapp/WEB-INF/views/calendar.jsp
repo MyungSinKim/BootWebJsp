@@ -19,7 +19,7 @@
 
 <script>
 $(function(){
-	AllTimePickers();
+	initDatePickers();
 });
 </script>
 </head>
