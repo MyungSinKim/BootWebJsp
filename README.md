@@ -17,4 +17,4 @@ External Tomcat 8<br>
 Test URL <br>
 Calendar : http://localhost:8080/BootWebJsp/calendar.do<br>
 HighCharts : http://localhost:8080/BootWebJsp/chartLine.do<br>
-Jsfiddle : https://jsfiddle.net/wizardkyn/kL875a7u/
+Jsfiddle : https://jsfiddle.net/wizardkyn/kxjwknnf/
