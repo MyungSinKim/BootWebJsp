@@ -14,8 +14,9 @@
   <script src="<c:url value="/webjars/jquery/2.2.1/jquery.min.js"/>"></script>
   <script src="<c:url value="/webjars/highcharts/4.2.3/highcharts.js"/>"></script>
   <script src="<c:url value="/webjars/highcharts/4.2.3/highcharts-more.js"/>"></script>
+  <script src="<c:url value="/webjars/sockjs-client/1.0.2/sockjs.min.js"/>"></script>
+  <script src="<c:url value="/webjars/stomp-websocket/2.3.3/stomp.min.js"/>"></script>
   <script src="<c:url value="/resources/js/initHighcharts.js"/>"></script>
-  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
   
 <script>
 $(function () {
@@ -98,7 +99,7 @@ $(function () {
         },
         series: [{
             name: 'Speed',
-            data: [80],
+            data: [0],
             tooltip: {
                 valueSuffix: ' km/h'
             }
@@ -106,48 +107,38 @@ $(function () {
     };
     
 	var chartGauge = new Highcharts.Chart(chartOptions);
+	
+    function redrawChart(speed) {
+        var point = chartGauge.series[0].points[0];
+        point.update(parseInt(speed));
+    }
 
-	// Long Polling 
-/* 
-	(function poll(){
-	    $.ajax({ url: "<c:url value="/chartData.do"/>", success: function(data){
-	    	var point = chartGauge.series[0].points[0];
-	    	point.update(data);
-	    }, dataType: "json", complete: poll, timeout: 3000 });
-	})();	
- */
+    function sendData() {
+        var speed = Math.floor((Math.random() * 200) + 1);
+        stompClient.send("/BootWebJsp/howfast", {}, JSON.stringify({'currentSpeed':speed}));
+    }
 
-    // Polling with setInterval
+    var stompClient = null;
 
-/* 
-    setInterval(function(){
-	    $.ajax({ url: "<c:url value="/chartData.do"/>", success: function(data){
-            var point = chartGauge.series[0].points[0];
-            point.update(data);
-	    }, dataType: "json"});
-	}, 3000);
- */
- 
-    // Recursive Call with self executing setTimeout and Closure
+    function connect() {
+	    var socket = new SockJS('/BootWebJsp/howfast');
+	    stompClient = Stomp.over(socket);            
+	    stompClient.connect({}, function(frame) {
+	        console.log('Connected: ' + frame);
+	        setInterval(sendData, 3000);	        
+	        stompClient.subscribe('/topic/yourspeedis', function(speedMeter){
+                console.log('Recieved: ' + JSON.parse(speedMeter.body).currentSpeed);
+                redrawChart(JSON.parse(speedMeter.body).currentSpeed);
+	        });
+	    });
+	}
 
-    (function poll() {
-			setTimeout(function() {
-				$.ajax({
-					url : "<c:url value="/chartData.do"/>",
-					success : function(data) {
-			            var point = chartGauge.series[0].points[0];
-			            point.update(data);
-						poll();
-					},
-					dataType : "json"
-				});
-			}, 3000);
-	})();
+    connect();
 });
 </script>
 </head>
 <body>
-<h2>Server Push</h2>
+<h2>Server Push : WebSocket</h2>
 <div id="chartGauge" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 0"></div>
 </body>
 </html>
