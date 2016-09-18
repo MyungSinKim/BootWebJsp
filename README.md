@@ -19,3 +19,21 @@ Test URL : http://localhost:8080/BootWebJsp/index.do
 
 + List1
 + List2
+
+__Bold__
+
+___
+The Line
+___
+
+\` Java Code \`
+
+``` java
+@SpringBootApplication
+public class BootWebJspApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(BootWebJspApplication.class, args);
+    }
+}
+```
