@@ -9,3 +9,12 @@ JSTL<br>
 Logback<br>
 External Tomcat 8<br>
 Test URL : http://localhost:8080/BootWebJsp/index.do
+
+``` java
+@SpringBootApplication
+public class BootWebJspApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(BootWebJspApplication.class, args);
+    }
+}
+```
